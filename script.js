@@ -193,8 +193,8 @@ btn.addEventListener('click', () => {
 
         // Позиционируем по кругу
         const angle = (index / extraPhotos.length) * Math.PI * 2;
-        const x = centerX + Math.cos(angle) * radius - 50; // 50 - половина ширины фото
-        const y = centerY + Math.sin(angle) * radius - 50; // 50 - половина высоты фото
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
 
         img.style.left = x + 'px';
         img.style.top = y + 'px';
@@ -206,7 +206,7 @@ btn.addEventListener('click', () => {
         // Анимация появления
         setTimeout(() => {
             img.style.opacity = '1';
-            img.style.transform = 'scale(1)';
+            img.style.transform = 'translate(-50%, -50%) scale(1)';
         }, 500 + index * 200);
 
         // Логика перетаскивания (Mouse + Touch)
