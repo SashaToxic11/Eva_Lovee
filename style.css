@@ -1,0 +1,231 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+@keyframes pulseGlow {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.3; }
+}
+
+#overlay {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(30, 40, 60, 0.4) 0%, rgba(5, 5, 10, 0.8) 100%);
+    animation: pulseGlow 15s infinite ease-in-out;
+}
+
+#surprise-btn {
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-family: 'Montserrat', sans-serif;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    pointer-events: auto; /* Важно: это делает кнопку кликабельной */
+    z-index: 10;
+}
+
+#surprise-btn:hover {
+    background: white;
+    color: black;
+    box-shadow: 0 0 20px white;
+}
+
+#photo {
+    display: none;
+    width: 300px;
+    height: 300px;
+    /* Форма сердечка через clip-path */
+    clip-path: url(#heart-shape);
+    object-fit: cover;
+    margin-top: 30px;
+    border: 5px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#extra-photos-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.extra-photo {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 0.1s ease;
+    cursor: grab;
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.extra-photo:hover {
+    transform: scale(1.1) !important;
+    z-index: 10;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+}
+
+/* Убираем классы, которые больше не нужны */
+/* .extra-photo.floating, .extra-photo.moving-back, @keyframes floatPhoto, @keyframes driftAway { ... } */
+
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; filter: blur(10px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0px); }
+}
+
+@keyframes disintegrate {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.5); opacity: 0; }
+}
+
+#photo.disintegrating {
+    animation: disintegrate 1s forwards;
+}
+
+#title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 8rem;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    animation: fadeIn 3s ease-out;
+    transition: text-shadow 0.5s ease;
+}
+
+@media (max-width: 600px) {
+    #title {
+        font-size: 2rem;
+    }
+    #photo {
+        width: 150px;
+        height: 150px;
+    }
+    .extra-photo {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 400px) {
+    #title {
+        font-size: 1.8rem;
+    }
+    #photo {
+        width: 120px;
+        height: 120px;
+    }
+    .extra-photo {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+#title:hover {
+    text-shadow: 0 0 50px rgba(255, 255, 255, 0.8), 0 0 100px rgba(255, 255, 255, 0.5);
+    cursor: default;
+}
+
+.shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 5px white;
+    pointer-events: none;
+    z-index: 3;
+    animation: shoot 2s linear forwards;
+}
+
+@keyframes shoot {
+    0% { transform: translate(0, 0); opacity: 1; }
+    100% { transform: translate(100vw, 100vh); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+#words-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.word {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: float 15s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0% { transform: translateY(110vh); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-20vh); opacity: 0; }
+}
+
+/* Эффект при клике */
+.click-effect {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: clickRipple 0.6s linear forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes clickRipple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(4); opacity: 0; }
+}

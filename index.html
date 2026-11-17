@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Евы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <svg width="0" height="0">
+        <defs>
+            <clipPath id="heart-shape" clipPathUnits="objectBoundingBox">
+                <path d="M0.5 0.9 C 0.333 0.733, 0 0.566, 0 0.3 C 0 0.133, 0.166 0, 0.333 0 C 0.433 0, 0.5 0.066, 0.5 0.066 C 0.5 0.066, 0.566 0, 0.666 0 C 0.833 0, 1 0.133, 1 0.3 C 1 0.566, 0.666 0.733, 0.5 0.9" />
+            </clipPath>
+        </defs>
+    </svg>
+    <div id="overlay">
+        <h1 id="title">Ева</h1>
+        <button id="surprise-btn">Нажать</button>
+        <img id="photo" src="photo.jpg" alt="Ева">
+        <div id="extra-photos-container"></div>
+        <div id="words-container"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
