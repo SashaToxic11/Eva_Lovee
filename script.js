@@ -178,79 +178,83 @@ btn.addEventListener('click', () => {
     btn.style.display = 'none';
     photo.style.display = 'block';
 
-    // Show extra photos
-    const container = document.getElementById('extra-photos-container');
-    const photoRect = photo.getBoundingClientRect(); // Получаем позицию главной фото
-    const centerX = photoRect.left + photoRect.width / 2;
-    const centerY = photoRect.top + photoRect.height / 2;
-    const radius = Math.min(250, Math.min(window.innerWidth, window.innerHeight) / 2 - 70); // Адаптивный радиус
+    // Добавляем requestAnimationFrame, чтобы браузер успел применить display: block
+    // и рассчитать размеры элемента перед вычислениями координат
+    requestAnimationFrame(() => {
+        // Show extra photos
+        const container = document.getElementById('extra-photos-container');
+        const photoRect = photo.getBoundingClientRect(); // Получаем позицию главной фото
+        const centerX = photoRect.left + photoRect.width / 2;
+        const centerY = photoRect.top + photoRect.height / 2;
+        const radius = Math.min(250, Math.min(window.innerWidth, window.innerHeight) / 2 - 70); // Адаптивный радиус
 
-    // Добавляем обработчик перемещения для каждой фото
-    extraPhotos.forEach((src, index) => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.className = 'extra-photo';
+        // Добавляем обработчик перемещения для каждой фото
+        extraPhotos.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = 'extra-photo';
 
-        // Позиционируем по кругу
-        const angle = (index / extraPhotos.length) * Math.PI * 2;
-        const x = centerX + Math.cos(angle) * radius;
-        const y = centerY + Math.sin(angle) * radius;
+            // Позиционируем по кругу
+            const angle = (index / extraPhotos.length) * Math.PI * 2;
+            const x = centerX + Math.cos(angle) * radius;
+            const y = centerY + Math.sin(angle) * radius;
 
-        img.style.left = x + 'px';
-        img.style.top = y + 'px';
-        img.style.position = 'absolute';
-        img.style.cursor = 'grab';
+            img.style.left = x + 'px';
+            img.style.top = y + 'px';
+            img.style.position = 'absolute';
+            img.style.cursor = 'grab';
 
-        container.appendChild(img);
+            container.appendChild(img);
 
-        // Анимация появления
-        setTimeout(() => {
-            img.style.opacity = '1';
-            img.style.transform = 'translate(-50%, -50%) scale(1)';
-        }, 500 + index * 200);
+            // Анимация появления
+            setTimeout(() => {
+                img.style.opacity = '1';
+                img.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 500 + index * 200);
 
-        // Логика перетаскивания (Mouse + Touch)
-        function startDrag(e) {
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            // Логика перетаскивания (Mouse + Touch)
+            function startDrag(e) {
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
-            let shiftX = clientX - img.getBoundingClientRect().left;
-            let shiftY = clientY - img.getBoundingClientRect().top;
+                let shiftX = clientX - img.getBoundingClientRect().left;
+                let shiftY = clientY - img.getBoundingClientRect().top;
 
-            function moveAt(pageX, pageY) {
-                img.style.left = pageX - shiftX + 'px';
-                img.style.top = pageY - shiftY + 'px';
+                function moveAt(pageX, pageY) {
+                    img.style.left = pageX - shiftX + 'px';
+                    img.style.top = pageY - shiftY + 'px';
+                }
+
+                function onMove(e) {
+                    const pageX = e.pageX || (e.touches && e.touches[0].pageX);
+                    const pageY = e.pageY || (e.touches && e.touches[0].pageY);
+                    if (pageX && pageY) moveAt(pageX, pageY);
+                }
+
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove, { passive: false });
+
+                function onEnd() {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('touchmove', onMove);
+                    document.onmouseup = null;
+                    document.ontouchend = null;
+                    img.style.cursor = 'grab';
+                }
+
+                document.onmouseup = onEnd;
+                document.ontouchend = onEnd;
+
+                img.style.cursor = 'grabbing';
+                if (e.type !== 'touchstart') e.preventDefault();
             }
 
-            function onMove(e) {
-                const pageX = e.pageX || (e.touches && e.touches[0].pageX);
-                const pageY = e.pageY || (e.touches && e.touches[0].pageY);
-                if (pageX && pageY) moveAt(pageX, pageY);
-            }
+            img.addEventListener('mousedown', startDrag);
+            img.addEventListener('touchstart', startDrag, { passive: false });
 
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('touchmove', onMove, { passive: false });
-
-            function onEnd() {
-                document.removeEventListener('mousemove', onMove);
-                document.removeEventListener('touchmove', onMove);
-                document.onmouseup = null;
-                document.ontouchend = null;
-                img.style.cursor = 'grab';
-            }
-
-            document.onmouseup = onEnd;
-            document.ontouchend = onEnd;
-
-            img.style.cursor = 'grabbing';
-            if (e.type !== 'touchstart') e.preventDefault();
-        }
-
-        img.addEventListener('mousedown', startDrag);
-        img.addEventListener('touchstart', startDrag, { passive: false });
-
-        img.ondragstart = function() {
-            return false;
-        };
+            img.ondragstart = function() {
+                return false;
+            };
+        });
     });
 });
